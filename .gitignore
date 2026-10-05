@@ -1,1 +1,25 @@
 data/packet_level_dataset_with_geometry_doppler_rp002_1_0_5.csv
+# Virtual environment
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+
+# Large datasets
+data/raw/*
+data/processed/*.csv
+data/processed/*.parquet
+
+# Trained models
+models/*.joblib
+
+# Vector database
+data/vector_store/*

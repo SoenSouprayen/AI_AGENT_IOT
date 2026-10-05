@@ -1,0 +1,30 @@
+project:
+  name: "AI Agent for Adaptive Modulation Selection"
+
+satellite:
+  frequency_hz: 868000000
+  earth_radius_km: 6378
+  default_altitude_km: 780
+
+modulations:
+  - DR8
+  - DR9
+  - SF7
+  - SF8
+  - SF9
+  - SF10
+  - SF11
+  - SF12
+
+database:
+  name: "ai_agent_iot"
+  collection: "simulations"
+
+prediction:
+  model_path: "models/per_model/per_predictor.joblib"
+
+agent:
+  max_latency_ms: 500
+
+ollama:
+  model: "qwen2.5:7b"
