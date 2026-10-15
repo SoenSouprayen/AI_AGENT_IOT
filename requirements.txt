@@ -1,9 +1,8 @@
 pandas
 numpy
-pymongo
-pyyaml
 python-dotenv
 scikit-learn
 joblib
-skyfield
 requests
+langchain-core==1.6.9
+langchain-ollama==1.1.0

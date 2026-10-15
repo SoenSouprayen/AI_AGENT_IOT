@@ -19,7 +19,4 @@ data/processed/*.csv
 data/processed/*.parquet
 
 # Trained models
-models/*.joblib
-
-# Vector database
-data/vector_store/*
+models/**/*.joblib
