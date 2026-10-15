@@ -1,0 +1,200 @@
+{
+  "rows": 2040,
+  "folds": 5,
+  "trees": 400,
+  "metrics": {
+    "RF_mode_N": {
+      "per_mae": 0.007753519668848854,
+      "per_r2": 0.9957867949632617,
+      "conditions": 255,
+      "decision_accuracy": 1.0,
+      "mean_regret": 0.0,
+      "max_regret": 0.0,
+      "p95_regret": 0.0
+    },
+    "RF_common_geometry": {
+      "per_mae": 0.0045000275032297645,
+      "per_r2": 0.9986637174193442,
+      "conditions": 255,
+      "decision_accuracy": 1.0,
+      "mean_regret": 0.0,
+      "max_regret": 0.0,
+      "p95_regret": 0.0
+    },
+    "RF_A_Geometry_diagnostic": {
+      "per_mae": 0.004503085682350016,
+      "per_r2": 0.998660763400191,
+      "conditions": 255,
+      "decision_accuracy": 1.0,
+      "mean_regret": 0.0,
+      "max_regret": 0.0,
+      "p95_regret": 0.0
+    },
+    "N_rule_learned_on_train": {
+      "conditions": 255,
+      "decision_accuracy": 1.0,
+      "mean_regret": 0.0,
+      "max_regret": 0.0,
+      "p95_regret": 0.0
+    },
+    "always_DR8": {
+      "conditions": 255,
+      "decision_accuracy": 0.6666666666666666,
+      "mean_regret": 0.01205613554981069,
+      "max_regret": 0.058940661091198776,
+      "p95_regret": 0.04482016681476585
+    }
+  },
+  "split_group": "scenario_seed (toutes les réplications, charges, modes et élévations ensemble)",
+  "splits": [
+    {
+      "fold": 1,
+      "train_seeds": [
+        14208600,
+        143124019,
+        476609186,
+        516440592,
+        737391964,
+        1845549003,
+        2413269343,
+        3043308152,
+        3612515684,
+        3907222307,
+        4026211867,
+        4211780816
+      ],
+      "test_seeds": [
+        648524250,
+        3237521590,
+        4255064056
+      ]
+    },
+    {
+      "fold": 2,
+      "train_seeds": [
+        14208600,
+        143124019,
+        476609186,
+        648524250,
+        737391964,
+        1845549003,
+        2413269343,
+        3237521590,
+        3612515684,
+        3907222307,
+        4026211867,
+        4255064056
+      ],
+      "test_seeds": [
+        516440592,
+        3043308152,
+        4211780816
+      ]
+    },
+    {
+      "fold": 3,
+      "train_seeds": [
+        14208600,
+        143124019,
+        516440592,
+        648524250,
+        737391964,
+        1845549003,
+        3043308152,
+        3237521590,
+        3612515684,
+        3907222307,
+        4211780816,
+        4255064056
+      ],
+      "test_seeds": [
+        476609186,
+        2413269343,
+        4026211867
+      ]
+    },
+    {
+      "fold": 4,
+      "train_seeds": [
+        14208600,
+        476609186,
+        516440592,
+        648524250,
+        737391964,
+        2413269343,
+        3043308152,
+        3237521590,
+        3612515684,
+        4026211867,
+        4211780816,
+        4255064056
+      ],
+      "test_seeds": [
+        143124019,
+        1845549003,
+        3907222307
+      ]
+    },
+    {
+      "fold": 5,
+      "train_seeds": [
+        143124019,
+        476609186,
+        516440592,
+        648524250,
+        1845549003,
+        2413269343,
+        3043308152,
+        3237521590,
+        3907222307,
+        4026211867,
+        4211780816,
+        4255064056
+      ],
+      "test_seeds": [
+        14208600,
+        737391964,
+        3612515684
+      ]
+    }
+  ],
+  "feature_sets": {
+    "RF_mode_N": [
+      "mode",
+      "N"
+    ],
+    "RF_common_geometry": [
+      "mode",
+      "N",
+      "elevation_mean_deg",
+      "distance_mean_km",
+      "orbital_velocity_mean_ms",
+      "relative_velocity_mean_ms",
+      "relative_velocity_signed_mean_ms",
+      "doppler_shift_mean_hz"
+    ],
+    "RF_A_Geometry_diagnostic": [
+      "mode",
+      "N",
+      "elevation_mean_deg",
+      "distance_mean_km",
+      "orbital_velocity_mean_ms",
+      "relative_velocity_mean_ms",
+      "relative_velocity_signed_mean_ms",
+      "doppler_shift_mean_hz",
+      "doppler_rate_mean_hz_s",
+      "doppler_peak_rate_mean_hz_s"
+    ]
+  },
+  "limitations": [
+    "Validation croisée de développement sur le CSV existant, pas un nouveau test final indépendant.",
+    "Nouveaux seeds de scénarios existants ; aucune preuve de généralisation à toute géométrie.",
+    "RF_A_Geometry_diagnostic utilise les features propres à chaque ligne candidate ; deux taux Doppler diffèrent entre modes.",
+    "RF_common_geometry exclut ces deux taux ; les six autres features sont vérifiées communes à chaque condition.",
+    "Les features agrégées doivent aussi être disponibles avant la décision pour une utilisation réelle.",
+    "La règle N est apprise uniquement sur les données d'entraînement de chaque fold.",
+    "Métriques non pondérées par le nombre de paquets ; ex aequo optimaux acceptés à 1e-12 près.",
+    "Aucun modèle de production remplacé ; aucun ajustement d'hyperparamètres ou test LLM effectué."
+  ],
+  "dataset": "/Users/darius/AI_AGENT_IOT/data/processed/scenario_dataset.csv"
+}

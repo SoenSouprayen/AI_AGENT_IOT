@@ -1,0 +1,192 @@
+{
+  "raw_rows": 6400000,
+  "raw_size_bytes": 4412740330,
+  "raw_ranges": {
+    "elevation_deg": [
+      5.000008062011239,
+      89.99972911140016
+    ],
+    "distance_km": [
+      500.00000000518753,
+      2077.9388348540847
+    ],
+    "orbital_velocity_ms": [
+      7615.769075593438,
+      7615.769075593438
+    ],
+    "relative_velocity_ms": [
+      0.0333995884849486,
+      7035.2628978262865
+    ],
+    "relative_velocity_signed_ms": [
+      -7035.2628978262865,
+      7035.262884161854
+    ],
+    "doppler_shift_hz": [
+      -20369.452334429603,
+      20369.45237399273
+    ],
+    "doppler_rate_hz_s": [
+      -311.44321600795274,
+      -2.467162426603005
+    ],
+    "doppler_peak_rate_hz_s": [
+      2.5011327852987812,
+      311.44323029120244
+    ],
+    "rx_power_dbm": [
+      -181.77861871109872,
+      -101.93430942524732
+    ],
+    "snr_db": [
+      -64.7725316469512,
+      38.24579929897365
+    ],
+    "visibility_window_s": [
+      552.1779232156631,
+      552.1779232156631
+    ],
+    "max_elevation_deg": [
+      90.0,
+      90.0
+    ]
+  },
+  "raw_path": "/Users/darius/AI_AGENT_IOT/data/raw/packet_level_dataset_with_geometry_doppler_rp002_1_0_5.csv",
+  "aggregation_comparison": {
+    "paired_rows": 2040,
+    "unmatched_rows": 0,
+    "columns": {
+      "elevation_mean_deg": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 7.105427357601002e-15
+      },
+      "distance_mean_km": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 2.2737367544323206e-13
+      },
+      "orbital_velocity_mean_ms": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 0.0
+      },
+      "relative_velocity_mean_ms": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 4.547473508864641e-13
+      },
+      "relative_velocity_signed_mean_ms": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 5.684341886080802e-14
+      },
+      "doppler_shift_mean_hz": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 2.2737367544323206e-13
+      },
+      "doppler_rate_mean_hz_s": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 2.842170943040401e-14
+      },
+      "doppler_peak_rate_mean_hz_s": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 2.842170943040401e-14
+      },
+      "rx_power_mean_dbm": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 2.842170943040401e-14
+      },
+      "snr_mean_db": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 3.552713678800501e-15
+      },
+      "n_packets": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 0.0
+      },
+      "n_success": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 0.0
+      },
+      "per": {
+        "mismatched_rows": 0,
+        "max_absolute_difference": 1.1102230246251565e-16
+      }
+    },
+    "matches_existing": true,
+    "additional_metadata_preserved": [
+      "visibility_window_mean_s"
+    ]
+  },
+  "dataset_audit": {
+    "rows": 2040,
+    "conditions": 255,
+    "environments": [
+      "urban"
+    ],
+    "N_values": [
+      10000,
+      50000,
+      100000
+    ],
+    "seed_replication_groups": 15,
+    "conditions_with_optimal_ties": 1,
+    "modes_optimal_for_every_condition_at_N": {
+      "10000": [
+        "DR8"
+      ],
+      "50000": [
+        "DR8"
+      ],
+      "100000": [
+        "DR9"
+      ]
+    },
+    "N_only_rule_suffices_on_observed_data": true,
+    "geometry_spread_across_modes": {
+      "elevation_mean_deg": {
+        "conditions_different": 0,
+        "max_range": 0.0
+      },
+      "distance_mean_km": {
+        "conditions_different": 0,
+        "max_range": 0.0
+      },
+      "orbital_velocity_mean_ms": {
+        "conditions_different": 0,
+        "max_range": 0.0
+      },
+      "relative_velocity_mean_ms": {
+        "conditions_different": 0,
+        "max_range": 0.0
+      },
+      "relative_velocity_signed_mean_ms": {
+        "conditions_different": 0,
+        "max_range": 0.0
+      },
+      "doppler_shift_mean_hz": {
+        "conditions_different": 0,
+        "max_range": 0.0
+      },
+      "doppler_rate_mean_hz_s": {
+        "conditions_different": 255,
+        "max_range": 0.25954081283930464
+      },
+      "doppler_peak_rate_mean_hz_s": {
+        "conditions_different": 255,
+        "max_range": 2.7521170995489683
+      }
+    },
+    "packet_count_range": [
+      181,
+      19894
+    ],
+    "limitations": [
+      "Audit descriptif du CSV agrégé, pas une validation hors échantillon.",
+      "Les différences de géométrie entre modes doivent être expliquées par le simulateur.",
+      "Une règle liée à N sur ces observations ne prouve pas une adaptation géométrique.",
+      "Le CSV brut et le code du simulateur ne sont pas audités par ce script."
+    ]
+  },
+  "limitations": [
+    "Lecture complète des colonnes sélectionnées, sans code du simulateur.",
+    "Le regroupement reste par tranches de 5 degrés ; les moyennes masquent la variabilité interne.",
+    "Aucun nouveau scénario, entraînement ou résultat de généralisation produit ici."
+  ]
+}

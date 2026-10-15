@@ -1,0 +1,35 @@
+{
+  "status": "plan_only_not_simulated",
+  "runs": 3240,
+  "physical_grid_groups": 135,
+  "test_groups": 50,
+  "test_conditions_including_N": 150,
+  "seed": 42,
+  "velocity_kind": "speed_norm",
+  "split_scope": "Nouvelles répétitions de la même grille ; pas une preuve de généralisation à des géométries inédites.",
+  "required_result_columns": [
+    "condition_id",
+    "mode",
+    "n_packets",
+    "n_success",
+    "per",
+    "rx_power_dbm",
+    "snr_db",
+    "visibility_window_s",
+    "distance_km",
+    "doppler_shift_hz",
+    "doppler_rate_hz_s"
+  ],
+  "constraints": [
+    "Ce plan contrôlé ne représente pas des trajectoires TLE déjà validées physiquement.",
+    "Confirmer la définition de vitesse avec le simulateur ; aucune conversion Doppler implicite.",
+    "Configurer fréquence, BW, CR, payload, puissance, bruit et environnement dans le simulateur.",
+    "Un seed identique ne garantit pas à lui seul les mêmes réalisations entre modes.",
+    "Conserver le même contexte exogène pour les huit modes et toutes les valeurs de N du groupe.",
+    "Réserver les groupes test avant tout entraînement ou ajustement des prompts.",
+    "Les 50 groupes test couvrent 150 conditions en incluant N.",
+    "per = 1 - n_success/n_packets, fraction entre 0 et 1 ; conserver les comptes.",
+    "Ne pas concaténer directement ce plan au CSV A_Geometry : il ne contient aucun résultat.",
+    "Prévoir un adaptateur du simulateur et un export vers les colonnes A_Geometry existantes."
+  ]
+}

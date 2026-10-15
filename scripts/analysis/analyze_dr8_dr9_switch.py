@@ -19,9 +19,6 @@ KEYS = [
     "elevation_bin"
 ]
 
-# -----------------------------------------
-# PER DR8 vs DR9 sur chaque condition
-# -----------------------------------------
 
 comparison = (
     df.pivot_table(
@@ -74,9 +71,7 @@ table_elevation = pd.crosstab(
 
 print(table_elevation.round(2))
 
-# -----------------------------------------
-# Graphique PER DR8 / DR9 vs elevation
-# -----------------------------------------
+
 
 mean_per = (
     df.groupby(
@@ -110,10 +105,6 @@ plt.savefig(
 )
 
 plt.close()
-
-# -----------------------------------------
-# Différence DR9 - DR8
-# -----------------------------------------
 
 difference = (
     comparison

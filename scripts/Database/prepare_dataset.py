@@ -68,9 +68,7 @@ for chunk_number, chunk in enumerate(
     start=1
 ):
 
-    # -----------------------------
-    # Elevation bins de 5 degrés
-    # -----------------------------
+    # 5degres
 
     chunk["elevation_bin"] = (
         chunk["elevation_deg"] // ELEVATION_BIN_SIZE
@@ -82,9 +80,6 @@ for chunk_number, chunk in enumerate(
         "elevation_bin"
     ] = 85
 
-    # -----------------------------
-    # Booléens -> entiers
-    # -----------------------------
 
     for column in [
         "success",
@@ -99,9 +94,7 @@ for chunk_number, chunk in enumerate(
             .astype(int)
         )
 
-    # -----------------------------
-    # Agrégation du chunk
-    # -----------------------------
+    # chunk
 
     agg = (
         chunk
@@ -171,14 +164,12 @@ for chunk_number, chunk in enumerate(
 
 print("\nFusion des agrégations...")
 
-# Seulement les petites agrégations sont concaténées,
-# pas les 6.4 millions de paquets.
+# Seulement les petites agrégations sont concaténées
 temp = pd.concat(
     aggregated_chunks,
     ignore_index=True
 )
 
-# Un même groupe peut apparaître dans plusieurs chunks.
 # On additionne donc les statistiques.
 sum_columns = [
     column
@@ -193,9 +184,8 @@ df = (
     .reset_index()
 )
 
-# --------------------------------------
-# Calcul des moyennes
-# --------------------------------------
+#moyennes
+
 
 df["elevation_mean_deg"] = (
     df["elevation_sum"] / df["n_packets"]
@@ -260,9 +250,9 @@ df["doppler_snr_penalty_mean_db"] = (
     df["n_packets"]
 )
 
-# --------------------------------------
+
 # Résultats
-# --------------------------------------
+
 
 df["per"] = (
     1 -
@@ -285,9 +275,9 @@ df["visibility_loss_rate"] = (
     df["n_packets"]
 )
 
-# --------------------------------------
+
 # Colonnes finales
-# --------------------------------------
+
 
 FINAL_COLUMNS = [
     "scheme",

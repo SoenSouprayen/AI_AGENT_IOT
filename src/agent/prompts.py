@@ -2,9 +2,12 @@ from langchain_core.prompts import ChatPromptTemplate
 
 
 SCIENTIFIC_LIMITATION = (
-    "Dans le dataset actuel, le mode optimal observé dépend de N : DR8 pour "
+    "Dans le CSV agrégé par tranches de 5 degrés utilisé pour entraîner ce modèle, "
+    "le mode optimal observé dépend de N : DR8 pour "
     "10 000 et 50 000, DR9 pour 100 000. L'adaptation géométrique du choix "
-    "n'est pas validée. Aucun nouveau score de validation n'est calculé."
+    "n'est pas validée. Cette observation ne s'étend pas automatiquement à une "
+    "agrégation plus fine ou à des géométries inédites. Aucun nouveau score de "
+    "validation n'est calculé lors de cette recommandation."
 )
 
 EXPLANATION_PROMPT = ChatPromptTemplate.from_messages([
@@ -16,6 +19,8 @@ Ne présente pas ce minimum comme une garantie de meilleur débit ou d'énergie 
 Ne recalcule pas les PER et n'invente ni chiffres ni scores.
 N'attribue pas le choix à l'élévation ou au Doppler : l'adaptation géométrique
 de la sélection n'est pas validée dans le dataset actuel.
+Le prédicteur utilise bien la géométrie : absence de validation ne signifie pas
+que le calcul l'ignore. Ne prétends pas que la décision dépend uniquement de N par construction.
 Les PER sont des prédictions du modèle, pas des mesures de terrain.
 Si les informations fournies ne permettent pas de répondre, signale cette limite.
 Réponds sans citations et sans inventer de référence scientifique.

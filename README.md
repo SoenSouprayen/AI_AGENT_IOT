@@ -15,5 +15,14 @@ python app.py --llm-model llama3.2:3b --N 100000 --require-llm --question "Compa
 
 python -m unittest discover -s tests -p 'test_*.py' -v
 
+python scripts/analysis/audit_agent_dataset.py
+
+# Étude fondée uniquement sur le CSV fourni. Choisir un nouveau dossier à chaque exécution.
+python scripts/analysis/audit_raw_dataset.py --output-dir results/csv_raw_audit
+python scripts/ML/evaluate_csv_agent.py --output-dir results/csv_agent_evaluation
+
+python scripts/analysis/audit_raw_dataset.py --bin-size 1 --output-dir results/csv_raw_audit_1deg
+python scripts/ML/evaluate_csv_agent.py --dataset results/csv_raw_audit_1deg/reaggregated_dataset.csv --output-dir results/csv_agent_evaluation_1deg
+
 python app.py --llm-model llama3.2:3b --interactive
 ```

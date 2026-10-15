@@ -10,8 +10,7 @@ KEYS = [
     "scenario_seed",
     "elevation_bin"
 ]
-
-# Vérification : combien de modulations sont présentes
+#combien de modulations sont présentes
 # pour chaque condition ?
 coverage = (
     df.groupby(KEYS)["mode"]
