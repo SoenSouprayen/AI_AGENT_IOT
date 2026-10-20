@@ -19,3 +19,6 @@
 .question-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:10px;color:var(--muted)}
 .question-disclaimer{font-size:10px;line-height:1.8;color:#7a8792;margin:17px 0 0}
 @media(max-width:760px){.questions-card{padding:18px}.questions-heading{align-items:flex-start}.question-composer{flex-direction:column}.question-composer .primary-button{width:100%}.question-message{max-width:95%}}
+.brand{display:inline-flex;align-items:center;gap:0}
+.brand-title{margin:0;font-size:20px;line-height:1.2;font-weight:700;letter-spacing:1px;white-space:nowrap}
+@media(max-width:480px){.brand-title{font-size:16px;letter-spacing:.5px}.local-tag{font-size:8px}}

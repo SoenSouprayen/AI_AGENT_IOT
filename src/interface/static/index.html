@@ -3,15 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Agent AI : LORA CSS </title>
+  <title>AI AGENT IOT</title>
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/questions.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="/" aria-label="Accueil Orbit"><span class="brand-icon">◎</span> orbit<span class="brand-dot">.</span></a><span class="project">AI_AGENT_IOT <span>/</span> laboratoire de liaison</span><span class="local-tag"><i></i> Démonstration locale</span></header>
+  <header class="topbar"><a class="brand" href="/" aria-label="Accueil AI AGENT IOT"><span class="brand-icon" aria-hidden="true">◎</span><h1 class="brand-title">AI AGENT IOT</h1></a><span class="local-tag"><i></i> Démonstration locale</span></header>
   <main>
-    <section class="intro"><div><div class="eyebrow">DU SCÉNARIO À LA DÉCISION</div><h1>Le satellite bouge.<br>L’agent vous explique.</h1><p>Explorez une liaison satellite et comparez les huit modes de transmission.</p></div><div class="intro-note"><span>01</span><p>Déplacez le satellite<br>sur son arc, de gauche à droite.</p></div></section>
     <div class="workspace">
       <section class="scene-card">
         <div class="card-head"><div><span class="eyebrow">EXPLORATEUR DE SCÉNARIOS</span><h2>Une liaison, plusieurs possibilités</h2></div><span class="scene-tag">VUE ILLUSTRATIVE</span></div>
@@ -44,7 +43,6 @@
         <div class="card-head"><div><span class="eyebrow">DÉCISION DE L’AGENT</span><h2>Le mode recommandé</h2></div><span id="prediction-status" class="status" role="status">Chargement…</span></div>
         <div class="recommendation"><div><span class="small-label">PER PRÉDIT MINIMAL</span><div id="best-mode">—</div><span id="family" class="family">En attente du scénario</span></div><div class="per-summary"><strong id="best-per">—</strong><span>de paquets perdus<br>prédits par le modèle</span></div></div>
         <div class="bars-head"><span>Les huit modes</span><span>PER prédit · plus bas = mieux</span></div><div id="mode-bars" class="mode-bars"></div>
-        <div class="ollama-panel"><div class="ollama-title"><span class="sparkle">✳</span><div><h3>L’explication, en clair</h3><span id="llm-model">Ollama · Llama</span></div></div><p id="explanation">Une fois le scénario choisi, demandez au LLM d’expliquer la recommandation.</p><button id="explain" class="primary-button" type="button" disabled>Expliquer avec Ollama <span>↗</span></button><span id="llm-status" role="status"></span></div>
       </aside>
     </div>
     <section class="telemetry"><div><span class="eyebrow">PARAMÈTRES RÉELLEMENT FOURNIS AU MODÈLE</span><p>Le scénario CSV le plus proche, sans interpolation.</p></div><div class="telemetry-value"><span>Élévation utilisée</span><strong id="used-angle">—</strong></div><div class="telemetry-value"><span>Distance moyenne</span><strong id="distance">—</strong></div><div class="telemetry-value"><span>Vitesse relative moyenne</span><strong id="velocity">—</strong></div><div class="telemetry-value"><span>Doppler moyen signé</span><strong id="doppler">—</strong></div></section>
@@ -57,7 +55,7 @@
     </section>
     <div id="error" class="error" role="alert" hidden></div>
     <details class="science"><summary>Comprendre cette démonstration et ses limites <span>＋</span></summary><div><p><strong>Python décide. Le LLM explique.</strong> Seul le PER prédit est optimisé, pas le débit ni l’énergie. Ces entrées viennent du CSV d’entraînement : ce n’est pas un test indépendant.</p><p id="source-note"></p><p>Les deux taux Doppler diffèrent entre modes dans le CSV. Comme dans l’application en ligne de commande, cette vue réutilise les features d’une ligne DR8 pour comparer les huit candidats. L’adaptation géométrique de la sélection n’est pas validée.</p><p id="scientific-limitation"></p></div></details>
-    <footer><span>AI_AGENT_IOT <span class="footer-separator">/</span> Un laboratoire, pas une prédiction de terrain.</span><span id="dataset-name">CSV à 1° · Random Forest</span></footer>
+    <footer><span>AI AGENT IOT <span class="footer-separator">/</span> Un laboratoire, pas une prédiction de terrain.</span><span id="dataset-name">CSV à 1° · Random Forest</span></footer>
   </main>
 </body>
 </html>

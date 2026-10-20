@@ -64,5 +64,6 @@ def create_chat_model(config):
         base_url=config.base_url,
         temperature=0,
         num_predict=512,
+        keep_alive="15m",
         client_kwargs={"timeout": config.timeout},
     )

@@ -81,9 +81,6 @@ function clearResult() {
     row.querySelector(".bar-fill").style.width = "0%";
     row.classList.remove("best");
   }
-  byId("explain").disabled = true;
-  byId("explanation").textContent = "Une fois le scénario choisi, demandez au LLM d’expliquer la recommandation.";
-  byId("llm-status").textContent = explanationInFlight ? "L’explication précédente est encore en cours ; elle ne sera pas affichée pour ce scénario." : "";
   byId("error").hidden = true;
   byId("question-history").replaceChildren();
   byId("question-context").textContent = "Sélection d’un nouveau scénario…";
@@ -120,7 +117,6 @@ function displayResult(result) {
   byId("doppler").textContent = `${number(geometry.doppler_shift_mean_hz, 0)} Hz`;
   byId("source-note").textContent = `Source : ${result.input_source.dataset}, seed ${result.input_source.seed}, réplication ${result.input_source.replication}. ${result.input_source.note}`;
   byId("scientific-limitation").textContent = result.limitation;
-  byId("explain").disabled = explanationInFlight;
   byId("question-context").textContent = `N = ${number(result.scenario.N, 0)} · élévation utilisée : ${number(geometry.elevation_mean_deg, 2)}° · mode recommandé : ${decision.best_mode}`;
   updateQuestionControls();
 }
@@ -146,50 +142,33 @@ function schedulePrediction() {
   }, 140);
 }
 
-async function explain(question = null) {
+async function askQuestion(question) {
   if (!activeResult || explanationInFlight) return;
   const version = generation;
   explanationInFlight = true;
-  byId("explain").disabled = true;
   updateQuestionControls();
-  if (question !== null) {
-    appendMessage("user", question);
-    byId("question-input").value = "";
-    byId("question-status").textContent = "Ollama prépare sa réponse…";
-  }
-  byId("llm-status").textContent = "Ollama prépare son explication… Cela peut prendre quelques secondes.";
+  appendMessage("user", question);
+  byId("question-input").value = "";
+  byId("question-status").textContent = "Ollama prépare sa réponse…";
   try {
-    const result = await request(question === null ? "/api/explain" : "/api/ask", {
-      ...payload(), ...(question === null ? {} : {question}),
-    });
+    const result = await request("/api/ask", {...payload(), question});
     if (version !== generation) return;
     if (result.llm_status === "generated") {
-      if (question === null) byId("explanation").textContent = result.explanation;
-      else appendMessage("assistant", result.explanation);
-      byId("question-status").textContent = question === null ? "" : "Réponse reçue · texte non vérifié automatiquement.";
-      byId("llm-status").textContent = "Texte généré par le LLM, non vérifié automatiquement. La décision reste celle de Python.";
+      appendMessage("assistant", result.explanation);
+      byId("question-status").textContent = "Réponse reçue · texte non vérifié automatiquement.";
     } else {
-      byId("explanation").textContent = "La décision Python est disponible, mais Ollama n’a pas pu produire l’explication.";
-      byId("llm-status").textContent = result.llm_error || "Démarrez Ollama puis réessayez.";
-      if (question !== null) {
-        appendMessage("assistant", "Ollama est indisponible. La décision Python reste affichée. Démarrez Ollama puis renvoyez votre question.");
-        byId("question-status").textContent = "Aucune réponse du LLM. Vous pouvez réessayer.";
-        if (!byId("question-input").value) byId("question-input").value = question;
-      }
+      appendMessage("assistant", "Ollama est indisponible. La décision Python reste affichée. Démarrez Ollama puis renvoyez votre question.");
+      byId("question-status").textContent = result.llm_error || "Aucune réponse du LLM. Vous pouvez réessayer.";
+      if (!byId("question-input").value) byId("question-input").value = question;
     }
   } catch (error) {
     if (version === generation) {
-      byId("llm-status").textContent = error.message;
-      if (question !== null) {
-        byId("question-status").textContent = error.message;
-        if (!byId("question-input").value) byId("question-input").value = question;
-      }
+      byId("question-status").textContent = error.message;
+      if (!byId("question-input").value) byId("question-input").value = question;
     }
   } finally {
     explanationInFlight = false;
-    byId("explain").disabled = !activeResult;
     updateQuestionControls();
-    if (version !== generation) byId("llm-status").textContent = "Scénario modifié : vous pouvez demander une nouvelle explication.";
     if (version !== generation) byId("question-status").textContent = "Scénario modifié : l’ancienne réponse a été ignorée.";
   }
 }
@@ -214,7 +193,6 @@ async function start() {
   byId("load").disabled = false;
   byId("scenario").disabled = false;
   byId("dataset-name").textContent = `${configuration.dataset} · ${number(configuration.training_rows, 0)} lignes d’entraînement`;
-  byId("llm-model").textContent = `Ollama · ${configuration.llm_model}`;
   for (const mode of configuration.modes) {
     const row = document.createElement("div");
     row.className = "mode-row";
@@ -242,12 +220,11 @@ async function start() {
     byId("scenario").selectedIndex = 0;
     schedulePrediction();
   });
-  byId("explain").addEventListener("click", () => explain());
   byId("question-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const question = byId("question-input").value.trim();
     if (!question || !activeResult || explanationInFlight) return;
-    explain(question);
+    askQuestion(question);
   });
   byId("question-input").addEventListener("keydown", (event) => {
     if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
@@ -256,7 +233,7 @@ async function start() {
     }
   });
   for (const button of document.querySelectorAll(".question-suggestion")) button.addEventListener("click", () => {
-    if (activeResult && !explanationInFlight) explain(button.textContent);
+    if (activeResult && !explanationInFlight) askQuestion(button.textContent);
   });
   const satellite = byId("satellite");
   let dragging = false;

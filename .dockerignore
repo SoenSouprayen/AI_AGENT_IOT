@@ -1,9 +1,0 @@
-**
-!Dockerfile
-!requirements.txt
-!requirements-docker.txt
-!interface.py
-!src/
-!src/**
-**/__pycache__/
-**/*.pyc
