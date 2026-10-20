@@ -1,14 +1,23 @@
+import argparse
 import os
 import pandas as pd
 from dotenv import load_dotenv
 
 load_dotenv()
 
-INPUT_PATH = os.getenv("DATASET_PATH")
-OUTPUT_PATH = "data/processed/scenario_dataset.csv"
+parser = argparse.ArgumentParser(description="Préparer les agrégats à 1° sans écraser le dataset à 5°.")
+parser.add_argument("--input", default=os.getenv("DATASET_PATH"))
+arguments = parser.parse_args()
+INPUT_PATH = arguments.input
+if not INPUT_PATH or not os.path.isfile(INPUT_PATH):
+    parser.error("CSV brut introuvable : préciser son chemin avec --input.")
+OUTPUT_PATH = "data/processed/scenario_dataset_1deg.csv"
 
 CHUNK_SIZE = 100_000
-ELEVATION_BIN_SIZE = 5
+ELEVATION_BIN_SIZE = 1
+
+if os.path.exists(OUTPUT_PATH):
+    raise FileExistsError(f"Dataset déjà présent : {OUTPUT_PATH}. Aucun écrasement effectué.")
 
 USECOLS = [
     "scheme",
@@ -68,17 +77,14 @@ for chunk_number, chunk in enumerate(
     start=1
 ):
 
-    # 5degres
-
     chunk["elevation_bin"] = (
         chunk["elevation_deg"] // ELEVATION_BIN_SIZE
     ) * ELEVATION_BIN_SIZE
 
-    # Évite éventuellement un bin 90-95
     chunk.loc[
         chunk["elevation_bin"] >= 90,
         "elevation_bin"
-    ] = 85
+    ] = 90 - ELEVATION_BIN_SIZE
 
 
     for column in [
@@ -326,7 +332,8 @@ os.makedirs(
 
 df.to_csv(
     OUTPUT_PATH,
-    index=False
+    index=False,
+    mode="x"
 )
 
 print("\n\n=== RESULTAT ===")

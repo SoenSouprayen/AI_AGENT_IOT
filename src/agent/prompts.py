@@ -2,7 +2,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 
 SCIENTIFIC_LIMITATION = (
-    "Dans le CSV agrégé par tranches de 5 degrés utilisé pour entraîner ce modèle, "
+    "Dans l'analyse du CSV agrégé par tranches de 5 degrés, "
     "le mode optimal observé dépend de N : DR8 pour "
     "10 000 et 50 000, DR9 pour 100 000. L'adaptation géométrique du choix "
     "n'est pas validée. Cette observation ne s'étend pas automatiquement à une "

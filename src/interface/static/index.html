@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Agent AI : LORA CSS </title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/questions.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="Accueil Orbit"><span class="brand-icon">◎</span> orbit<span class="brand-dot">.</span></a><span class="project">AI_AGENT_IOT <span>/</span> laboratoire de liaison</span><span class="local-tag"><i></i> Démonstration locale</span></header>
+  <main>
+    <section class="intro"><div><div class="eyebrow">DU SCÉNARIO À LA DÉCISION</div><h1>Le satellite bouge.<br>L’agent vous explique.</h1><p>Explorez une liaison satellite et comparez les huit modes de transmission.</p></div><div class="intro-note"><span>01</span><p>Déplacez le satellite<br>sur son arc, de gauche à droite.</p></div></section>
+    <div class="workspace">
+      <section class="scene-card">
+        <div class="card-head"><div><span class="eyebrow">EXPLORATEUR DE SCÉNARIOS</span><h2>Une liaison, plusieurs possibilités</h2></div><span class="scene-tag">VUE ILLUSTRATIVE</span></div>
+        <div class="orbit-scene">
+          <svg id="orbit" viewBox="0 0 760 410" role="img" aria-label="Satellite déplaçable au-dessus d’une station au sol">
+            <defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#eaf1ff"/><stop offset="1" stop-color="#fbfcff"/></linearGradient><linearGradient id="ground" x2="0" y2="1"><stop stop-color="#d9e6da"/><stop offset="1" stop-color="#eff4e9"/></linearGradient></defs>
+            <rect width="760" height="410" fill="url(#sky)"/>
+            <g stroke="#dce5f2" stroke-dasharray="3 8"><path d="M80 337 A300 280 0 0 1 680 337" fill="none"/><path d="M180 337 A200 190 0 0 1 580 337" fill="none"/><path d="M380 40 V337"/></g>
+            <text x="380" y="28" text-anchor="middle" class="svg-label">ZÉNITH · 90°</text><text x="80" y="319" class="svg-label">HORIZON</text><text x="624" y="319" class="svg-label">HORIZON</text>
+            <path d="M0 375 Q380 290 760 375 V410 H0Z" fill="url(#ground)"/>
+            <path id="orbit-path" d="M81 311 A300 280 0 0 1 679 311" fill="none" stroke="#7f9ccc" stroke-width="2" stroke-dasharray="7 8"/>
+            <path id="beam-area" fill="#3567e814"/>
+            <line id="beam" x1="380" y1="337" x2="167" y2="139" stroke="#3567e8" stroke-width="2" stroke-dasharray="6 5"/>
+            <path id="angle-arc" fill="none" stroke="#3567e8" stroke-width="2"/>
+            <text id="angle-label" class="angle-label" x="425" y="320">45°</text>
+            <g transform="translate(380 335)"><circle cy="1" r="24" fill="#fff" stroke="#c2d3c9"/><path d="M-9 13 L0 -15 L9 13 M-5 3 H5 M-7 9 H7" fill="none" stroke="#29483f" stroke-width="2"/><circle cy="-15" r="3" fill="#29483f"/><path d="M-8 -18 Q-14 -10 -8 -5 M8 -18 Q14 -10 8 -5" fill="none" stroke="#29483f" stroke-width="1.5"/></g>
+            <text x="380" y="389" text-anchor="middle" class="station-label">STATION AU SOL</text>
+            <g id="satellite" tabindex="0" role="slider" aria-label="Position du satellite sur l’arc" aria-valuemin="5" aria-valuemax="175" aria-valuenow="45" transform="translate(167 139)">
+              <circle r="41" fill="#fff" opacity="0.65"/>
+              <g transform="rotate(-15)"><rect x="-47" y="-15" width="28" height="30" rx="3" fill="#224ea9" stroke="#173467"/><rect x="19" y="-15" width="28" height="30" rx="3" fill="#224ea9" stroke="#173467"/><path d="M-38 -14 V14 M-29 -14 V14 M28 -14 V14 M38 -14 V14 M-46 0 H-20 M20 0 H46" stroke="#779de7"/><path d="M-20 0 H20" stroke="#294b7c" stroke-width="3"/><rect x="-14" y="-19" width="28" height="38" rx="5" fill="#f8fbff" stroke="#294b7c" stroke-width="2"/><circle cy="-5" r="6" fill="#cad9ee" stroke="#294b7c"/><path d="M-6 19 L0 27 L6 19 M0 27 V33" fill="none" stroke="#294b7c" stroke-width="2"/></g>
+            </g>
+          </svg>
+          <div class="drag-hint">↔ Faites glisser le satellite · ou utilisez les flèches du clavier</div>
+        </div>
+        <div class="position-control"><div><label for="position">Position sur le passage</label><strong id="requested-angle">45° d’élévation</strong></div><input id="position" type="range" min="5" max="175" value="45" step="1"><div class="range-labels"><span>Gauche</span><span>À la verticale</span><span>Droite</span></div></div>
+        <div class="controls"><label>Charge du réseau N<select id="load" disabled></select></label><label>Réalisation du CSV<select id="scenario" disabled></select></label><button id="reset" class="reset-button" type="button">↺ Réinitialiser</button></div>
+        <div class="scene-foot"><span class="dot"></span><p>Le dessin ne simule pas une orbite. Il sélectionne une ligne du CSV selon l’élévation. À gauche et à droite, une même élévation utilise les mêmes données moyennées.</p></div>
+      </section>
+      <aside class="result-card">
+        <div class="card-head"><div><span class="eyebrow">DÉCISION DE L’AGENT</span><h2>Le mode recommandé</h2></div><span id="prediction-status" class="status" role="status">Chargement…</span></div>
+        <div class="recommendation"><div><span class="small-label">PER PRÉDIT MINIMAL</span><div id="best-mode">—</div><span id="family" class="family">En attente du scénario</span></div><div class="per-summary"><strong id="best-per">—</strong><span>de paquets perdus<br>prédits par le modèle</span></div></div>
+        <div class="bars-head"><span>Les huit modes</span><span>PER prédit · plus bas = mieux</span></div><div id="mode-bars" class="mode-bars"></div>
+        <div class="ollama-panel"><div class="ollama-title"><span class="sparkle">✳</span><div><h3>L’explication, en clair</h3><span id="llm-model">Ollama · Llama</span></div></div><p id="explanation">Une fois le scénario choisi, demandez au LLM d’expliquer la recommandation.</p><button id="explain" class="primary-button" type="button" disabled>Expliquer avec Ollama <span>↗</span></button><span id="llm-status" role="status"></span></div>
+      </aside>
+    </div>
+    <section class="telemetry"><div><span class="eyebrow">PARAMÈTRES RÉELLEMENT FOURNIS AU MODÈLE</span><p>Le scénario CSV le plus proche, sans interpolation.</p></div><div class="telemetry-value"><span>Élévation utilisée</span><strong id="used-angle">—</strong></div><div class="telemetry-value"><span>Distance moyenne</span><strong id="distance">—</strong></div><div class="telemetry-value"><span>Vitesse relative moyenne</span><strong id="velocity">—</strong></div><div class="telemetry-value"><span>Doppler moyen signé</span><strong id="doppler">—</strong></div></section>
+    <section class="questions-card" aria-labelledby="questions-title">
+      <div class="questions-heading"><div><span class="eyebrow">DISCUTER AVEC L’AGENT</span><h2 id="questions-title">Une question sur ce scénario ?</h2><p id="question-context">Le scénario est en cours de chargement.</p></div><span class="scene-tag">OLLAMA · LOCAL</span></div>
+      <div class="question-suggestions" aria-label="Exemples de questions"><button type="button" class="question-suggestion" disabled>Pourquoi ce mode ?</button><button type="button" class="question-suggestion" disabled>Que signifie le PER ?</button><button type="button" class="question-suggestion" disabled>Compare DR8 et DR9.</button></div>
+      <div id="question-history" class="question-history" role="log" aria-label="Questions et réponses sur le scénario" aria-live="polite"><p class="question-welcome">Posez votre question : l’agent recevra les paramètres affichés et les huit PER prédits.</p></div>
+      <form id="question-form"><label for="question-input">Votre question</label><div class="question-composer"><textarea id="question-input" rows="2" maxlength="500" placeholder="Exemple : pourquoi DR9 est-il préféré à DR8 ici ?" aria-describedby="question-help" required disabled></textarea><button id="question-send" class="primary-button" type="submit" disabled>Envoyer <span>↗</span></button></div><div class="question-meta"><span id="question-help">Entrée pour envoyer · Maj + Entrée pour une nouvelle ligne · 500 caractères maximum.</span><span id="question-status" role="status"></span></div></form>
+      <p class="question-disclaimer">Chaque question utilise le scénario actuel, sans mémoire des échanges précédents. Changer le satellite, N ou la réalisation efface les échanges affichés. Le LLM explique : il ne modifie ni les paramètres ni la décision Python. Ses réponses ne sont pas vérifiées automatiquement.</p>
+    </section>
+    <div id="error" class="error" role="alert" hidden></div>
+    <details class="science"><summary>Comprendre cette démonstration et ses limites <span>＋</span></summary><div><p><strong>Python décide. Le LLM explique.</strong> Seul le PER prédit est optimisé, pas le débit ni l’énergie. Ces entrées viennent du CSV d’entraînement : ce n’est pas un test indépendant.</p><p id="source-note"></p><p>Les deux taux Doppler diffèrent entre modes dans le CSV. Comme dans l’application en ligne de commande, cette vue réutilise les features d’une ligne DR8 pour comparer les huit candidats. L’adaptation géométrique de la sélection n’est pas validée.</p><p id="scientific-limitation"></p></div></details>
+    <footer><span>AI_AGENT_IOT <span class="footer-separator">/</span> Un laboratoire, pas une prédiction de terrain.</span><span id="dataset-name">CSV à 1° · Random Forest</span></footer>
+  </main>
+</body>
+</html>

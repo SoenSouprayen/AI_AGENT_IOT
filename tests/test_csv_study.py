@@ -1,4 +1,6 @@
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -67,6 +69,38 @@ class CSVStudyTests(unittest.TestCase):
             self.assertEqual(fine["n_packets"].sum(), coarse["n_packets"].sum())
             with self.assertRaises(ValueError):
                 aggregate_raw(path, bin_size=2)
+
+    def test_preparation_cli_preserves_existing_dataset(self):
+        script = Path(__file__).resolve().parents[1] / "scripts/Database/prepare_dataset.py"
+        raw = self.raw_frame()
+        raw["scheme"] = raw["mode"].map(lambda mode: "LRFHSS" if mode.startswith("DR") else "LoRaCSS")
+        for name in ("fspl_db", "total_path_loss_db", "effective_path_loss_db", "doppler_snr_penalty_db"):
+            raw[name] = 0.0
+        for name in ("collision", "doppler_lost", "visibility_lost"):
+            raw[name] = False
+        frames = []
+        for elevation in (15.5, 16.5, 90):
+            frame = raw.copy()
+            frame["elevation_deg"] = elevation
+            frames.append(frame)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "raw.csv"
+            pd.concat(frames).to_csv(source, index=False)
+            previous = root / "data/processed/scenario_dataset.csv"
+            previous.parent.mkdir(parents=True)
+            previous.write_text("preserved", encoding="utf-8")
+            command = [sys.executable, str(script), "--input", str(source)]
+            result = subprocess.run(command, cwd=root, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            generated = root / "data/processed/scenario_dataset_1deg.csv"
+            dataset = pd.read_csv(generated)
+            self.assertEqual(set(dataset["elevation_bin"]), {15, 16, 89})
+            self.assertEqual(previous.read_text(), "preserved")
+            saved = generated.read_bytes()
+            repeat = subprocess.run(command, cwd=root, capture_output=True, text=True)
+            self.assertNotEqual(repeat.returncode, 0)
+            self.assertEqual(saved, generated.read_bytes())
 
     def test_raw_rejects_missing_invalid_boolean_and_nonfinite(self):
         for column, value in (("success", "unknown"), ("snr_db", np.inf),
