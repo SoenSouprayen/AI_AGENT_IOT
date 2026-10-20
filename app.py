@@ -8,8 +8,9 @@ from src.agent.modulation_agent import ModulationAgent
 from src.prediction.geometry_schema import DEFAULT_MODEL_PATH, GEOMETRY_FEATURES, PROJECT_ROOT
 from src.prediction.per_predictor import PERPredictor
 from src.utils.ollama_client import OllamaConfig
-
-
+##
+from src.rag.case_base import PERCaseBase
+##
 def read_scenario(arguments):
     if arguments.scenario:
         with arguments.scenario.open(encoding="utf-8") as scenario_file:
@@ -47,12 +48,19 @@ def main():
     parser.add_argument("--no-llm", action="store_true")
     parser.add_argument("--require-llm", action="store_true", help="Code de sortie 2 si le LLM échoue.")
     parser.add_argument("--interactive", action="store_true", help="Questions successives sur le même scénario.")
+   ##
+    parser.add_argument("--use-rag", action="store_true", help="Enrichir le prompt avec le RAG.")
+   ##
     arguments = parser.parse_args()
     if arguments.no_llm and arguments.require_llm:
         parser.error("--no-llm et --require-llm sont incompatibles.")
     try:
         geometry, N, source = read_scenario(arguments)
+        ##
+        case_base = PERCaseBase(dataset_path=arguments.dataset) if arguments.use_rag else None
+        ##
         config = None
+        
         if not arguments.no_llm and any(value is not None for value in (
             arguments.llm_model, arguments.ollama_url, arguments.timeout,
         )):
@@ -66,8 +74,18 @@ def main():
         )
         question = arguments.question
         while True:
+            ##
+            if case_base:
+                cases = case_base.search_similar_cases(geometry, top_k=3, N_filter=N)
+                rag_context = case_base.format_context_for_llm(cases)
+                current_question = f"{rag_context}\n\nQuestion : {question}"
+            ##
             result = agent.recommend(geometry, N, question)
             result["input_source"] = source
+            ##
+            if case_base:
+                result["rag_cases"] = cases
+            ##
             print(json.dumps(result, indent=2, ensure_ascii=False))
             if arguments.require_llm and result["llm_status"] != "generated":
                 return 2

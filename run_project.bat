@@ -180,13 +180,13 @@ goto :menu
 python app.py --no-llm --N 10000
 goto :after_run
 :run_llm1
-python app.py --llm-model %MODEL% --N 10000 --require-llm --question "Explique simplement pourquoi ce mode est recommande."
+python app.py --llm-model %MODEL% --N 10000 --require-llm --use-rag --question "Explique simplement pourquoi ce mode est recommande."
 goto :after_run
 :run_llm2
-python app.py --llm-model %MODEL% --N 100000 --require-llm --question "Compare les PER de DR8 et DR9 et explique le choix."
+python app.py --llm-model %MODEL% --N 100000 --require-llm --use-rag --question "Compare les PER de DR8 et DR9 et explique le choix."
 goto :after_run
 :run_inter
-python app.py --llm-model %MODEL% --interactive
+python app.py --llm-model %MODEL% --interactive --use-rag
 goto :after_run
 :run_tests
 python -m unittest discover -s tests -p "test_*.py" -v
