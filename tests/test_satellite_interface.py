@@ -77,6 +77,31 @@ class SatelliteInterfaceTests(unittest.TestCase):
         self.assertEqual(len(result["decision"]["per_by_mode"]), 8)
         self.assertEqual(result["llm_status"], "disabled")
 
+    def test_csv_is_the_only_scenario_source(self):
+        expected = self.playground.select_scenario(self.payload)
+        self.assertEqual(self.playground.select_scenario({**self.payload, "source": "csv"}), expected)
+        for source in ("celestrak", "unknown", None):
+            with self.subTest(source=source), self.assertRaisesRegex(ValueError, "CSV"):
+                self.playground.select_scenario({**self.payload, "source": source})
+
+    def test_removed_orbital_routes_return_not_found(self):
+        for method, path in (("POST", "/api/live"), ("GET", "/live.css")):
+            request = f"{method} {path} HTTP/1.1\r\nHost: localhost:8501\r\nContent-Length: 0\r\nConnection: close\r\n\r\n".encode()
+
+            class MemoryHandler(make_handler(self.playground)):
+                def setup(self):
+                    self.rfile = BytesIO(request)
+                    self.wfile = BytesIO()
+
+                def finish(self):
+                    pass
+
+                def log_message(self, format, *args):
+                    pass
+
+            handler = MemoryHandler(None, ("127.0.0.1", 12345), SimpleNamespace(server_port=8501))
+            self.assertIn(b"404 Not Found", handler.wfile.getvalue())
+
     def test_invalid_requests_and_unknown_scenarios(self):
         invalid = [None, [], {}, {**self.payload, "N": True}, {**self.payload, "seed": "42"},
                    {**self.payload, "seed": 999}, {**self.payload, "N": 25000}]

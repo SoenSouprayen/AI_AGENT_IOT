@@ -1,32 +1,25 @@
 ```bash
 cd /Users/darius/AI_AGENT_IOT
 
-# Docker Desktop doit être démarré. Lance l’interface + Ollama + Llama.
-# Premier lancement : images Docker + modèle Llama (environ 2 Go pour le modèle seul).
-# Prévoir environ 10 Go libres ; plusieurs minutes de téléchargement sont possibles.
-docker compose up --build -d
-open http://localhost:8501
+# Lancement recommandé sur Mac : Ollama local + site, sans activer la venv.
+# Ouvre Ollama si nécessaire, télécharge Llama uniquement s’il manque,
+# précharge le modèle puis ouvre le navigateur. Ctrl+C arrête le site, pas Ollama.
+# Ollama doit être installé ; les données et le modèle PER doivent déjà être présents.
+bash run_project.sh
 
-# Voir les services et les messages de démarrage.
-docker compose ps -a
-docker compose logs -f ollama-init agent
+# Facultatif : choisir un autre port ou lancer sans ouvrir le navigateur.
+bash run_project.sh --port 8502
+bash run_project.sh --no-browser
 
-# Arrêter les conteneurs, sans supprimer le modèle Llama téléchargé.
-docker compose down
-
-# Si le port 8501 est déjà utilisé par l’interface Python locale.
-AGENT_PORT=8502 docker compose up --build -d
-open http://localhost:8502
-
-# Sur Mac, Ollama en conteneur peut être plus lent que l’application native.
-# Les commandes ci-dessous restent disponibles pour le lancement sans Docker.
+# Installation des dépendances et lancement manuel, si nécessaire.
 source .venv/bin/activate
-
-# Interface graphique : satellite déplaçable, modèle à 1° et explications Ollama.
-python interface.py
+python -m pip install -r requirements.txt
 
 open -a Ollama
 ollama list
+
+# Interface CSV : satellite déplaçable, modèle à 1° et questions à Ollama.
+python interface.py
 
 python app.py --no-llm --N 10000
 python app.py --no-llm --N 50000

@@ -45,6 +45,8 @@ class SatellitePlayground:
     def select_scenario(self, payload):
         if not isinstance(payload, dict):
             raise ValueError("Une entrée JSON objet est requise.")
+        if payload.get("source", "csv") != "csv":
+            raise ValueError("Seuls les scénarios du CSV sont disponibles.")
         load, seed = payload.get("N"), payload.get("seed")
         position = payload.get("position_deg")
         if type(load) is not int or type(seed) is not int:

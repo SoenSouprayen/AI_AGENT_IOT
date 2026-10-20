@@ -7,11 +7,10 @@ set "MODEL=llama3.2:3b"
 set "DRIVE_URL=https://drive.google.com/file/d/15GaVgGYw6PLx6f8GllSbyRHXPeT2gdlq/view?usp=drive_link"
 set "DRIVE_ID=15GaVgGYw6PLx6f8GllSbyRHXPeT2gdlq"
 set "RAW_NAME=packet_level_dataset_with_geometry_doppler_rp002_1_0_5.csv"
-set "PROC_NAME=scenario_dataset.csv"
+set "PROC_NAME=scenario_dataset_1deg.csv"
 set "RAW_FILE=data\raw\%RAW_NAME%"
 set "PROC_FILE=data\processed\%PROC_NAME%"
-set "LLM_OK=0"
-set "MODEL_FILE=models\per_model\per_predictor_A_Geometry.joblib"
+set "MODEL_FILE=models\per_model\per_predictor_A_Geometry_1deg.joblib"
 
 echo ============================================================
 echo  AI_AGENT_IOT - verification de l'environnement
@@ -105,62 +104,20 @@ if not exist "%PROC_FILE%" goto :err_prepare
 echo     OK : %PROC_NAME% present
 if exist "%MODEL_FILE%" goto :model_ok
 echo     Entrainement du modele PER, cela peut prendre quelques minutes...
-python scripts\ML\train_geometry_per_model.py
+python scripts\ML\train_geometry_per_model.py --dataset "%PROC_FILE%" --model "%MODEL_FILE%"
 if errorlevel 1 goto :err_train
 if not exist "%MODEL_FILE%" goto :err_train
 :model_ok
 echo     OK : modele present
 
-rem ---------- 6. Ollama ----------
-echo.
-echo [6/6] Ollama et modele %MODEL%...
-where ollama >nul 2>&1
-if errorlevel 1 goto :no_ollama
-ollama list >nul 2>&1
-if not errorlevel 1 goto :ollama_up
-echo     Serveur Ollama arrete, demarrage...
-if exist "%LOCALAPPDATA%\Programs\Ollama\ollama app.exe" (
-    start "" "%LOCALAPPDATA%\Programs\Ollama\ollama app.exe"
-) else (
-    start "Ollama serve" /min ollama serve
-)
-for /l %%i in (1,1,20) do (
-    ollama list >nul 2>&1
-    if not errorlevel 1 goto :ollama_up
-    timeout /t 2 /nobreak >nul
-)
-echo     ATTENTION : le serveur Ollama ne repond pas. Mode LLM desactive.
-goto :menu
-:ollama_up
-ollama list | findstr /i /c:"%MODEL%" >nul
-if errorlevel 1 (
-    echo     Telechargement du modele %MODEL%...
-    ollama pull %MODEL%
-    if errorlevel 1 goto :no_model
-)
-set "LLM_OK=1"
-echo     OK : Ollama pret avec %MODEL%
-goto :menu
-:no_ollama
-echo     ATTENTION : Ollama n'est pas installe ^(https://ollama.com^). Mode LLM desactive.
-goto :menu
-:no_model
-echo     ATTENTION : impossible de telecharger %MODEL%. Mode LLM desactive.
-goto :menu
-
-rem ---------- Menu ----------
-:menu
+rem ---------- Lancement de l'application web ----------
+:launch_web
 echo.
 echo ============================================================
-echo  Tout est pret. Que veux-tu lancer ?
+echo  Tout est pret. Lancement de l'application web...
 echo ============================================================
-echo   1 - Agent sans LLM          (N = 10000)
-echo   2 - Agent avec LLM          (N = 10000, question d'explication)
-echo   3 - Agent avec LLM          (N = 100000, comparaison DR8/DR9)
-echo   4 - Mode interactif LLM
-echo   5 - Tests unitaires
-echo   6 - Quitter
 echo.
+<<<<<<< HEAD
 choice /c 123456 /n /m "Ton choix : "
 set "CH=%errorlevel%"
 if "%CH%"=="6" goto :end
@@ -193,13 +150,26 @@ python -m unittest discover -s tests -p "test_*.py" -v
 goto :after_run
 
 :after_run
+=======
+echo  URL ^(cliquable dans Windows Terminal^) :
+echo     http://localhost:8501
+echo  ^(si 8501 est occupe, l'URL finale sera affichee ci-dessous^)
+>>>>>>> 782088f0c3ccf54d38632e90538baa7a967aef96
 echo.
+echo  Appuyez sur Ctrl+C pour arreter le serveur web.
+echo.
+
+"%~dp0.venv\Scripts\python.exe" "%~dp0scripts\run_local.py" %*
+
+set "EXIT_CODE=%ERRORLEVEL%"
+echo.
+echo Interface web arretee ^(code %EXIT_CODE%^).
 pause
-goto :menu
+endlocal & exit /b %EXIT_CODE%
 
 rem ---------- Erreurs ----------
 :err_python
-echo     ERREUR : Python introuvable. Installe-le depuis https://www.python.org (coche "Add to PATH").
+echo     ERREUR : Python introuvable. Installe-le depuis https://www.python.org ^(coche "Add to PATH"^).
 goto :fail
 :err_venv
 echo     ERREUR : creation du .venv impossible.
@@ -223,7 +193,6 @@ goto :fail
 echo     ERREUR : CSV brut introuvable dans l'archive. Contenu extrait dans _download\extracted :
 dir /s /b "_download\extracted"
 goto :fail
-
 :err_prepare
 echo     ERREUR : la generation de %PROC_NAME% a echoue ^(voir le message ci-dessus^).
 goto :fail
@@ -234,8 +203,4 @@ goto :fail
 :fail
 echo.
 pause
-exit /b 1
-
-:end
-endlocal
-exit /b 0
+endlocal & exit /b 1

@@ -137,6 +137,7 @@ class OllamaClientTests(unittest.TestCase):
         result = create_chat_model(OllamaConfig(model="local", timeout=20))
         self.assertIs(result, chat.return_value)
         self.assertEqual(chat.call_args.kwargs["temperature"], 0)
+        self.assertEqual(chat.call_args.kwargs["keep_alive"], "15m")
         self.assertEqual(chat.call_args.kwargs["client_kwargs"], {"timeout": 20})
         self.assertEqual(get.call_args.kwargs["timeout"], 5)
 
