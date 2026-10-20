@@ -17,6 +17,7 @@ __pycache__/
 data/raw/*
 data/processed/*.csv
 data/processed/*.parquet
+_download/*
 
 # Trained models
 models/**/*.joblib
